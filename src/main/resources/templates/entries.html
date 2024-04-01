@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entries</title>
+</head>
+
+<body>
+    <h1>Entries</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Content</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry: ${entries}">
+
+                <td>
+                    <p th:text="${entry.title}"></p>
+                </td>
+                <td>
+                    <p th:text="${entry.content}"></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
