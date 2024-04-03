@@ -37,16 +37,15 @@ public class MyContentReader implements ContentReader {
     }
 
     private void readMarkdown(File file) throws IOException {
-        StringBuilder currentContent = new StringBuilder("");
+        List<String> contentLines = new ArrayList<>();
         List<String> lines = readFileInReverse(file);
         for (String line : lines) {
-            if (line.trim().startsWith("# ")) {
-                MyEntry entry = new MyEntry(line, currentContent.toString());
-                //System.out.println("Entry: " + entry.getTitle() + " - " + entry.getContent());
-                entries.add(entry);
-                currentContent = new StringBuilder("");
+            if (line.trim().startsWith("# ")) {                
+                MyEntry entry = new MyEntry(line.replace("# ", ""), formatContent(contentLines));                
+                entries.add(entry);                
+                contentLines = new ArrayList<>();
             } else {
-                currentContent.append(line).append("\n");
+                contentLines.add(line);
             }
         }
     }
@@ -61,6 +60,15 @@ public class MyContentReader implements ContentReader {
         }
         Collections.reverse(lines);
         return lines;
+    }
+
+    private String formatContent(List<String> contentLines){
+        Collections.reverse(contentLines);
+        StringBuilder content = new StringBuilder("");
+        for (String line : contentLines) {
+            content.append(line).append("\n");
+        }
+        return content.toString();
     }
 
 }

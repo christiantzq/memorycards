@@ -1,0 +1,16 @@
+.html, body {
+    background-color: black;
+}
+
+.container h1 {
+    color: aliceblue;
+}
+
+.blend-text {
+    color: white;
+    background-color: white;
+}
+
+.blend-text:hover {
+    color: black;
+}

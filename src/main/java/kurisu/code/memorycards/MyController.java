@@ -1,6 +1,7 @@
 package kurisu.code.memorycards;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -27,11 +28,8 @@ public class MyController {
         } catch (IOException e) {
             return "error";
         }
-
+        Collections.shuffle(entries);
         model.addAttribute("entries", entries);
-        for (MyEntry entry : entries) {
-            System.out.println("C- Entry: " + entry.getTitle() + " - " + entry.getContent());
-        }
         return "entries";
     }
 
