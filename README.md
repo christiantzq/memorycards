@@ -22,3 +22,16 @@ Setup with `mvn spring-boot:run`
 
 - Shell
   - `/usr/local/bin/memorycards.sh`
+
+## Re-Deployment
+```sh
+mvn package
+cd target
+scp memorycards-0.1.jar ubuntu@10.0.0.84:/tmp
+<password>
+
+ssh ubuntu@10.0.0.84
+<password>
+sudo cp /tmp/memorycards-0.1.jar /opt/memorycards/memorycards-0.1.jar
+/usr/local/bin/./memorycards.sh restart 
+```
