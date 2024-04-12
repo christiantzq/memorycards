@@ -7,13 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MyService {
-    private final String PATH = "/home/chris/doc/code/design-patterns";
-    
     
     private ContentReader contentReader = new MyContentReader();
 
-
-    public List<MyEntry> retrieveEntries() throws IOException {
-        return contentReader.getEntries(PATH);
+    public List<MyEntry> retrieveEntries(String path) throws IOException {
+        return contentReader.getEntries(path);
     }
 }

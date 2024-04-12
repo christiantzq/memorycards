@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MyController {
+
+    @Value("${DOC_PATH}")
+    private String DOC_PATH;
 
     private MyService service = new MyService();
 
@@ -24,8 +28,9 @@ public class MyController {
         List<MyEntry> entries;
 
         try {
-            entries = service.retrieveEntries();
+            entries = service.retrieveEntries(DOC_PATH + "/code/design-patterns");
         } catch (IOException e) {
+            e.printStackTrace();
             return "error";
         }
         Collections.shuffle(entries);

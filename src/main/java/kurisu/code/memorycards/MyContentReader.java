@@ -32,18 +32,28 @@ public class MyContentReader implements ContentReader {
                 } catch (Exception e) {
                     throw new IOException("Error reading file: " + file.getName() + ". Exception: " + e.getMessage());
                 }
+            } else if (file.isDirectory()) {
+                readPathRecursively(file);
             }
+
         }
     }
 
     private void readMarkdown(File file) throws IOException {
         List<String> contentLines = new ArrayList<>();
         List<String> lines = readFileInReverse(file);
+        String[] cheatWords = null;
         for (String line : lines) {
             if (line.trim().startsWith("# ")) {                
-                MyEntry entry = new MyEntry(line.replace("# ", ""), formatContent(contentLines));                
+                MyEntry entry = new MyEntry(line.replace("# ", ""), formatContent(contentLines));
+                entry.setCheatWords(cheatWords);
                 entries.add(entry);                
-                contentLines = new ArrayList<>();
+                contentLines = new ArrayList<>();                
+            } else if(line.trim().startsWith("[//]: # ("))  {
+                cheatWords = line.replace("[//]: # (", "").replace(")", "").split(",");
+                // for (String word : words) {
+                //     System.out.println("["+word+"]");
+                // }
             } else {
                 contentLines.add(line);
             }
