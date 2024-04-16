@@ -16,30 +16,16 @@
         <div class="row col-10">
             <div class="row">
                 <header>
-                    <h1>Entries</h1>
+                    <h1>Study Cards</h1>
                 </header>
             </div>
             <div class="row">
-                <table class="table table-secondary table-striped rounded rounded-3 overflow-hidden">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Content</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="entry: ${entries}">
-
-                            <td>
-                                <p class="blend-text" th:text="${entry.title}"></p>
-                            </td>
-                            <td>
-                                <pre><code th:text="${entry.content}"></code></pre>
-                                
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div th:each="entry,iterator : ${entries}">
+                    <div class="entry" th:classappend="${iterator.index % 2 == 0 ? 'even-row' : 'odd-row'}">
+                        <h2><span class="blend-text" th:text="${entry.title}"></span></h2>
+                        <pre><code th:text="${entry.content}"></code></pre>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row col-1"></div> <!-- Right Margin Col -->

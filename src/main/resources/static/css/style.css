@@ -14,3 +14,18 @@
 .blend-text:hover {
     color: black;
 }
+
+.entry {
+    /* Base styles for each entry div */
+    padding: 10px;
+    margin: 5px;
+  }
+  
+  .odd-row {
+    background-color: #cbcdd0;  /* Light gray */
+  }
+  
+  .even-row {
+    background-color: #d6d8db;  /* Gray */
+  }
+  
