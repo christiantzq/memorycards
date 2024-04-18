@@ -42,18 +42,16 @@ public class MyContentReader implements ContentReader {
     private void readMarkdown(File file) throws IOException {
         List<String> contentLines = new ArrayList<>();
         List<String> lines = readFileInReverse(file);
-        String[] cheatWords = null;
+        String cheatWords = "";
         for (String line : lines) {
             if (line.trim().startsWith("# ")) {                
                 MyEntry entry = new MyEntry(line.replace("# ", ""), formatContent(contentLines));
                 entry.setCheatWords(cheatWords);
                 entries.add(entry);                
-                contentLines = new ArrayList<>();                
+                contentLines = new ArrayList<>();
+                cheatWords = "";
             } else if(line.trim().startsWith("[//]: # ("))  {
-                cheatWords = line.replace("[//]: # (", "").replace(")", "").split(",");
-                // for (String word : words) {
-                //     System.out.println("["+word+"]");
-                // }
+                cheatWords = line.replace("[//]: # (", "").replace(")", "");
             } else {
                 contentLines.add(line);
             }

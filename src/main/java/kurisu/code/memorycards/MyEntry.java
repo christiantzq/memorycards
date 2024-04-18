@@ -14,6 +14,6 @@ public class MyEntry {
 
     @Setter @Getter private String content;
 
-    @Setter @Getter private String[] cheatWords;
+    @Setter @Getter private String cheatWords;
     
 }

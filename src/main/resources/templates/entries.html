@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+    <script th:inline="javascript">
+        // Passing json data from Controller to the HTML
+        /*<![CDATA[*/
+        const jsonString = /*[[${jsonString}]]*/ '{}';
+        const jsonCards = JSON.parse(jsonString);
+        /*]]*/
+    </script>
 </head>
 
 <body>
@@ -20,17 +27,36 @@
                 </header>
             </div>
             <div class="row">
-                <div th:each="entry,iterator : ${entries}">
+                <div id="cardList"></div>
+                <!-- <div th:each="entry,iterator : ${entries}">
                     <div class="entry" th:classappend="${iterator.index % 2 == 0 ? 'even-row' : 'odd-row'}">
                         <h2><span class="blend-text" th:text="${entry.title}"></span></h2>
-                        <pre><code th:text="${entry.content}"></code></pre>
+                        <code th:text="${entry.content}"></code>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="row col-1"></div> <!-- Right Margin Col -->
     </div>
+    <script>
+        const cardList = document.getElementById('cardList');
+        let index = 0;
+        jsonCards.forEach(function (entry) {
+            const div = document.createElement('div');
+            div.classList.add('entry');
+            index % 2 == 0 ? div.classList.add('even-row') : div.classList.add('odd-row');
 
+
+            // TODO, loop the cheat words and replace with...
+            const content1 = entry.content;
+            const content2 = content1.replace("design", "<span class='blend-text'>code here</span>");
+
+            div.innerHTML = `<h3 class="blend-text">${entry.title}</h3><pre><code>${content2}</code></pre>`;
+            
+            cardList.appendChild(div);
+            index++;
+        });
+    </script>
 </body>
 
 </html>
