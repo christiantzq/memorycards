@@ -12,6 +12,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MyContentReader implements ContentReader {
+    private final String CHEAT_WRD_TOKEN_F = "[//]: # (";
+    private final String CHEAT_WRD_TOKEN_E = ")";
+    private final String TITLE_TOKEN = "# ";
+    private final String SPACE = " ";
+    private final String LIST_SEPARATOR = ",";
+
     List<MyEntry> entries = new ArrayList<>();
 
     @Override
@@ -42,20 +48,30 @@ public class MyContentReader implements ContentReader {
     private void readMarkdown(File file) throws IOException {
         List<String> contentLines = new ArrayList<>();
         List<String> lines = readFileInReverse(file);
-        String cheatWords = "";
+        String wordsLine = "";
         for (String line : lines) {
-            if (line.trim().startsWith("# ")) {                
-                MyEntry entry = new MyEntry(line.replace("# ", ""), formatContent(contentLines));
-                entry.setCheatWords(cheatWords);
-                entries.add(entry);                
+            if (line.trim().startsWith(TITLE_TOKEN)) {                
+                MyEntry entry = new MyEntry(line.replace(TITLE_TOKEN, ""), formatContent(contentLines));
+                entry.setCheatWords(splitCheatWords(wordsLine));
+                entries.add(entry);
                 contentLines = new ArrayList<>();
-                cheatWords = "";
-            } else if(line.trim().startsWith("[//]: # ("))  {
-                cheatWords = line.replace("[//]: # (", "").replace(")", "");
+                wordsLine = "";
+            } else if(line.trim().startsWith(CHEAT_WRD_TOKEN_F))  {
+                wordsLine = line;
             } else {
                 contentLines.add(line);
             }
         }
+    }
+    
+    private String[] splitCheatWords(String wordsLine){
+        return wordsLine
+            // removes front and back token
+            .replace(CHEAT_WRD_TOKEN_F, "").replace(CHEAT_WRD_TOKEN_E, "")
+            // removes spaces
+            .replace(SPACE, "").trim()
+            // splits the word list
+            .split(LIST_SEPARATOR);
     }
 
     private List<String> readFileInReverse(File file) throws IOException {
