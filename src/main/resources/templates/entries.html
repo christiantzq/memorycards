@@ -53,7 +53,7 @@
                 console.log(entry.title + " -> " + word);
                 content2 = content2.replace(new RegExp(word, 'gi'), `<span class='blend-text'>${word}</span>`);
             });
-            // TODO, loop the cheat words and replace with...
+            // BUG: I thingk span is writen multiple times nesting words like word > words
 
             div.innerHTML = `<h3 class="blend-text">${entry.title}</h3><pre><code>${content2}</code></pre>`;
             

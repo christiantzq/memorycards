@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MyContentReader implements ContentReader {
-    private final String CHEAT_WRD_TOKEN_F = "[//]: # (";
-    private final String CHEAT_WRD_TOKEN_E = ")";
+    private final String CHEAT_WRD_START = "[//]: # (";
+    private final String CHEAT_WRD_END = ")";
     private final String TITLE_TOKEN = "# ";
     private final String SPACE = " ";
     private final String LIST_SEPARATOR = ",";
+    private final int lineLength = 89;
 
     List<MyEntry> entries = new ArrayList<>();
 
@@ -35,8 +36,8 @@ public class MyContentReader implements ContentReader {
                 try {
                     //System.out.println("Reading file: " + file.getName());
                     readMarkdown(file);
-                } catch (Exception e) {
-                    throw new IOException("Error reading file: " + file.getName() + ". Exception: " + e.getMessage());
+                } catch (IOException e) {
+                    throw new IOException("Error reading file: [" + file.getName() + "] Cause: "+ e.getCause() + "\n\n Exception: " + e.getMessage());
                 }
             } else if (file.isDirectory()) {
                 readPathRecursively(file);
@@ -48,16 +49,16 @@ public class MyContentReader implements ContentReader {
     private void readMarkdown(File file) throws IOException {
         List<String> contentLines = new ArrayList<>();
         List<String> lines = readFileInReverse(file);
-        String wordsLine = "";
+        String cheatWords = "";
         for (String line : lines) {
             if (line.trim().startsWith(TITLE_TOKEN)) {                
                 MyEntry entry = new MyEntry(line.replace(TITLE_TOKEN, ""), formatContent(contentLines));
-                entry.setCheatWords(splitCheatWords(wordsLine));
+                entry.setCheatWords(splitCheatWords(cheatWords));
                 entries.add(entry);
                 contentLines = new ArrayList<>();
-                wordsLine = "";
-            } else if(line.trim().startsWith(CHEAT_WRD_TOKEN_F))  {
-                wordsLine = line;
+                cheatWords = "";
+            } else if(line.trim().startsWith(CHEAT_WRD_START))  {
+                cheatWords = line;
             } else {
                 contentLines.add(line);
             }
@@ -67,7 +68,7 @@ public class MyContentReader implements ContentReader {
     private String[] splitCheatWords(String wordsLine){
         return wordsLine
             // removes front and back token
-            .replace(CHEAT_WRD_TOKEN_F, "").replace(CHEAT_WRD_TOKEN_E, "")
+            .replace(CHEAT_WRD_START, "").replace(CHEAT_WRD_END, "")
             // removes spaces
             .replace(SPACE, "").trim()
             // splits the word list
@@ -90,9 +91,36 @@ public class MyContentReader implements ContentReader {
         Collections.reverse(contentLines);
         StringBuilder content = new StringBuilder("");
         for (String line : contentLines) {
-            content.append(line).append("\n");
+            String formattedLine = formatLine(line);
+            content.append(formattedLine).append("\n");
         }
         return content.toString();
     }
 
+    // Shortens the length of the lines to 89 chars long
+    private String formatLine(String line) {
+        StringBuilder formattedText = new StringBuilder(line);
+        int lineStart = 0;
+        while ((formattedText.length() - lineStart) > lineLength + 1 ) {
+            int eolChar = lineStart + lineLength;
+
+            if(formattedText.charAt(eolChar) == ' '){
+                formattedText.setCharAt(eolChar, '\n');
+                lineStart = lineStart + lineLength + 1;
+            }
+            else if (formattedText.charAt(eolChar + 1) == ' '){ // Edge-case 1 char words
+                formattedText.setCharAt(eolChar + 1, '\n');
+                lineStart = lineStart + lineLength + 2;
+            } else {
+                for(int i = eolChar - 1; i >= 0; i--){
+                    if(formattedText.charAt(i) == ' '){
+                        formattedText.setCharAt(i, '\n');
+                        lineStart = i + 1;
+                        break;
+                    }
+                }
+            }
+        }
+        return formattedText.toString();
+    }
 }

@@ -33,5 +33,5 @@ scp memorycards-0.1.jar ubuntu@10.0.0.84:/tmp
 ssh ubuntu@10.0.0.84
 <password>
 sudo cp /tmp/memorycards-0.1.jar /opt/memorycards/memorycards-0.1.jar
-/usr/local/bin/./memorycards.sh restart 
+sudo /usr/local/bin/./memorycards.sh restart 
 ```
